@@ -9,7 +9,7 @@ win.maxsize(480,516)
 
 def start_game():
     global game,random_number
-    game = [[0,0,2,2],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+    game = [[0,2,2,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
     random_number = [2,2,2,2,2,2,2,4]
 
     """tmp = [random.randint(0,3),random.randint(0,3)]
@@ -34,6 +34,7 @@ def no_move():
     pass
 
 def move_left(arg):
+    s_no_move = True
     for x in range(len(game)):
         for y in range(len(game[0])):
             if game[x][y] != 0:
@@ -47,6 +48,7 @@ def move_left(arg):
                     if game[x][t] == game[x][y]:
                         game[x][t] = game[x][t] * 2
                         game[x][y] = 0
+                        s_no_move = False
                     elif game[x][t] != 0:
                         if game[x][t] != game[x][y-1]:
                             game[x][t+1] = game[x][y]
@@ -54,9 +56,12 @@ def move_left(arg):
                     elif t == 0:
                         game[x][t] = game[x][y]
                         game[x][y] = 0
-                    main_game()
+    if s_no_move:
+        no_move()
+    main_game()
 
 def move_right(arg):
+    s_no_move = True
     for x in range(len(game)):
         for y in range(len(game[0])):
             if game[x][y] != 0:
@@ -70,6 +75,7 @@ def move_right(arg):
                     if game[x][t] == game[x][y]:
                         game[x][t] = game[x][t] * 2
                         game[x][y] = 0
+                        s_no_move = False
                     elif game[x][t] != 0:
                         if game[x][t] != game[x][y+1]:
                             game[x][t-1] = game[x][y]
@@ -77,17 +83,68 @@ def move_right(arg):
                     elif t == 3:
                         game[x][t] = game[x][y]
                         game[x][y] = 0
-                    main_game()
+    if s_no_move:
+        no_move()
+    main_game()
 
 def move_up(arg):
-    pass
+    s_no_move = True
+    for x in range(len(game)):
+        for y in range(len(game[0])):
+            if game[x][y] != 0:
+                if x != 0:
+                    t = x
+                    while t >= 1 or game[t][y] == game[x][y] or game[t][y] in dico_colors.keys() and game[t][y] != game[x][y]:
+                        if t == 0:
+                            break
+                        else:
+                            t-=1
+                    if game[t][y] == game[x][y]:
+                        game[t][y] = game[t][y] * 2
+                        game[x][y] = 0
+                        s_no_move = False
+                    elif game[t][y] != 0:
+                        if game[t][y] != game[x-1][y]:
+                            game[t+1][y] = game[x][y]
+                            game[x][y] = 0
+                    elif t == 0:
+                        game[t][y] = game[x][y]
+                        game[x][y] = 0
+    if s_no_move:
+        no_move()
+    main_game()
 
 def move_down(arg):
-    pass
+    s_no_move = True
+    for x in range(len(game)):
+        for y in range(len(game[0])):
+            if game[x][y] != 0:
+                if x != 3:
+                    t = x
+                    while t <= 2 or game[t][y] == game[x][y] or game[t][y] in dico_colors.keys() and game[t][y] != game[x][y]:
+                        if t == 3:
+                            break
+                        else:
+                            t+=1
+                    if game[t][y] == game[x][y]:
+                        game[t][y] = game[t][y] * 2
+                        game[x][y] = 0
+                        s_no_move = False
+                    elif game[t][y] != 0:
+                        if game[t][y] != game[x+1][y]:
+                            game[t-1][y] = game[x][y]
+                            game[x][y] = 0
+                    elif t == 3:
+                        game[t][y] = game[x][y]
+                        game[x][y] = 0
+    if s_no_move:
+        no_move()
+    main_game()
 
 dico_colors = {2:"#EEE4DA",4:"#EDE0C8",8:"#F2B179",16:"#F59563",32:"#F67C60",64:"#F65E3B",128:"#EDCF73",256:"#EDCC62",512:"#EDC850",1024:"#EDC53F",2048:"#EDC22D"}
 s_b = []
 s_main = False
+s_no_move = False
 def main_game():
     global s_main,s_b
     if s_main:
